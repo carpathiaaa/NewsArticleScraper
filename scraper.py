@@ -103,26 +103,22 @@ with sync_playwright() as p:
     browser.close()
 
 
-#print(summary[0]['summary_text'])
-
 df = pd.DataFrame(zip(date_list, category_list, titles_list, url_list, articles_list), columns=['Dates', 'Categories', 'Titles', 'Links', 'Articles'])
 print(df)
 
 
 col = df['Dates'].fillna('').astype(str)
-#.str.replace('\n', ' ', regex=False)
 
-# 1) split once on the first slash or hyphen surrounded by spaces
+
 pub_tail = col.str.split(r'\s*[\n/]\s*', n=1, expand=True)
 
-df['Publisher'] = pub_tail[0].str.strip()                 # everything before the delimiter
-rest             = pub_tail[1].fillna('').str.strip()      # everything after it (time+date)
+df['Publisher'] = pub_tail[0].str.strip()                 
+rest             = pub_tail[1].fillna('').str.strip()      
 
 df['Publisher'] = df['Publisher'].str.split(' - ').str[-1].str.strip()
 
-# 2) pull time and date separately
 df['Time'] = rest.str.extract(r'(\d{1,2}:\d{2}\s*[AP]M)',  expand=False)
 df['Dates'] = rest.str.extract(r'(\w+\s+\d{1,2},\s*\d{4})', expand=False)
 
 
-df.to_csv('inquirer_articles.csv', index=False)
+df.to_csv('inquirer_articles.csv', mode='a', header=not os.path.exists('inquirer_articles.csv'), index=False)
