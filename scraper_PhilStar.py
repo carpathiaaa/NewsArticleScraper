@@ -103,4 +103,4 @@ with sync_playwright() as p:
 
 df = pd.DataFrame(results)
 print(df)
-# df.to_csv('PhilStarSample.csv', mode='a', header=not os.path.exists('PhilStarSample.csv'), index=False)
+df.to_csv('PhilStarScrape.csv', mode='a', header=not os.path.exists('PhilStarSample.csv'), index=False)
